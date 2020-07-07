@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+</head>
+<body>
+
+<h1>Total: <span id="total-sales"></span></h1>
+<h1>Average: <span id="ave-amount"></span></h1>
+<h1>Count in 60 sec: <span id="count"></span></h1>
+<button id="run-button">Run sales</button>
+<button id="stop-button">Stop sales</button>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io()
+
+    const $runButton = document.querySelector('#run-button');
+    const $stopButton = document.querySelector('#stop-button');
+    const $totalSales = document.querySelector('#total-sales');
+    const $aveAmount = document.querySelector('#ave-amount');
+    const $count = document.querySelector('#count');
+
+    socket.on('stat', (stat) => {
+        $totalSales.innerHTML = stat.total_sales_amount;
+        $aveAmount.innerHTML = stat.average_amount_per_order;
+        $count.innerHTML = stat.total_sales_count;
+    })
+
+    $runButton.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        socket.emit('run');
+    });
+
+    $stopButton.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        socket.emit('stop');
+    });
+</script>
+</body>
+</html>
