@@ -13,6 +13,7 @@ const addSale = ({ amount }) => {
         amount,
         createdAt: new Date().getTime()
     }
+
     sales.push(sale)
 
     return { sale }

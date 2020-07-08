@@ -9,10 +9,9 @@ const runSales = async (socket) => {
     isRunning = true;
     while(isRunning) {
         const sale = addSale({ amount: getRandomAmount(10, 5000) })
-
         socket.emit('stat', getStat());
 
-        await sleep(getRandomAmount(100, 2000));
+        await sleep(getRandomAmount(10, 1000));
     }
 };
 
