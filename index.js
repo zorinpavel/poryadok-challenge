@@ -1,4 +1,8 @@
-const app = require('express')();
+const express = require('express');
+const app = express();
+app.use(express.json())
+app.use(express.urlencoded({ extended: true })); // support encoded bodies
+
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
@@ -12,12 +16,28 @@ app.get('/', (req, res) => {
 
 
 app.get('/sales', (req, res) => {
-    const sale = addSale({ amount: req.query.amount });
+    const { error, sale } = addSale({ amount: req.query.sales_amount });
 
     const namespace = io.of("/dashboard");
     namespace.emit('stat', getStat());
 
-    res.status(201).send(sale);
+    if(error)
+        res.status(400).send({ error });
+    else
+        res.status(201).send(sale);
+});
+
+
+app.post('/sales', (req, res) => {
+    const { error, sale } = addSale({ amount: req.body.sales_amount });
+
+    const namespace = io.of("/dashboard");
+    namespace.emit('stat', getStat());
+
+    if(error)
+        res.status(400).send({ error });
+    else
+        res.status(201).send(sale);
 });
 
 
